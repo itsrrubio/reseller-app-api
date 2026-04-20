@@ -11,6 +11,7 @@ namespace ResellerApp.Api.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Listing> Listings { get; set; }
         public DbSet<ItemImage> ItemImages { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

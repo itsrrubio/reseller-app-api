@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ResellerApp.Api.Data;
 using ResellerApp.Api.DTOs;
@@ -9,6 +10,7 @@ namespace ResellerApp.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ItemsController : ControllerBase
     {
         private readonly IItemService _service;
