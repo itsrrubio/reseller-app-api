@@ -29,5 +29,6 @@ namespace ResellerApp.Api.Controllers
                 ProfitMarginPercent = decimal.Round(profitMargin, 2)
             });
         }
+
     }
 }

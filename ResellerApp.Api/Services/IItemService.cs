@@ -9,5 +9,6 @@ namespace ResellerApp.Api.Services
         Task<ItemResponseDto> GetItemByIdAsync(int id);
         Task<bool> UpdateItemAsync(int id, UpdateItemDto dto);
         Task<bool> DeleteItemAsync(int id);
+        Task<bool> CalculateAndSavePricingAsync(int itemId, ItemPricingUpdateDto dto);
     }
 }

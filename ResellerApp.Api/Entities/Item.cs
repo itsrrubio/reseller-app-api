@@ -31,6 +31,14 @@ namespace ResellerApp.Api.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public decimal EstimatedMarketplaceFeePercent { get; set; }
+
+        public decimal EstimatedShippingCost { get; set; }
+
+        public decimal SuggestedListingPrice { get; set; }
+
+        public decimal EstimatedNetProfit { get; set; }
+
         // Navigation
         public ICollection<Listing> Listings { get; set; }
         public ICollection<ItemImage> Images { get; set; }

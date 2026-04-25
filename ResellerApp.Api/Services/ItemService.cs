@@ -79,6 +79,10 @@ namespace ResellerApp.Api.Services
                     SKU = i.SKU,
                     Description = i.Description,
                     Cost = i.Cost,
+                    SuggestedListingPrice = i.SuggestedListingPrice,
+                    EstimatedNetProfit = i.EstimatedNetProfit,
+                    EstimatedShippingCost = i.EstimatedShippingCost,
+                    EstimatedMarketplaceFeePercent = i.EstimatedMarketplaceFeePercent,
                     Images = i.Images.Select(img => img.ImageUrl).ToList()
                 })
                 .FirstOrDefaultAsync();
@@ -117,6 +121,31 @@ namespace ResellerApp.Api.Services
 
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CalculateAndSavePricingAsync(
+        int itemId,
+        ItemPricingUpdateDto dto)
+        {
+            var item = await _context.Items.FindAsync(itemId);
+
+            if (item == null)
+                return false;
+
+            var feeRate = dto.MarketplaceFeePercent / 100m;
+
+            var suggestedPrice =
+                (item.Cost + item.DesiredProfit + dto.ShippingCost)
+                / (1 - feeRate);
+
+            item.EstimatedMarketplaceFeePercent = dto.MarketplaceFeePercent;
+            item.EstimatedShippingCost = dto.ShippingCost;
+            item.SuggestedListingPrice = decimal.Round(suggestedPrice, 2);
+            item.EstimatedNetProfit = item.DesiredProfit;
+
+            await _context.SaveChangesAsync();
+
             return true;
         }
     }
