@@ -63,6 +63,7 @@ namespace ResellerApp.Api.Services
                     SKU = i.SKU,
                     Description = i.Description,
                     Cost = i.Cost,
+                    Quantity = i.Quantity,
                     Images = i.Images.Select(img => img.ImageUrl).ToList()
                 })
                 .ToListAsync();
@@ -79,6 +80,7 @@ namespace ResellerApp.Api.Services
                     SKU = i.SKU,
                     Description = i.Description,
                     Cost = i.Cost,
+                    Quantity = i.Quantity,
                     SuggestedListingPrice = i.SuggestedListingPrice,
                     EstimatedNetProfit = i.EstimatedNetProfit,
                     EstimatedShippingCost = i.EstimatedShippingCost,
