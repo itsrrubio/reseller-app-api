@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ResellerApp.Api.Data;
 
@@ -11,9 +12,11 @@ using ResellerApp.Api.Data;
 namespace ResellerApp.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260428171417_AddSoldTracking")]
+    partial class AddSoldTracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,43 +175,6 @@ namespace ResellerApp.Api.Migrations
                     b.ToTable("Listings");
                 });
 
-            modelBuilder.Entity("ResellerApp.Api.Entities.ListingDraft", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DraftPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Marketplace")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("ListingDrafts");
-                });
-
             modelBuilder.Entity("ResellerApp.Api.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -249,17 +215,6 @@ namespace ResellerApp.Api.Migrations
                 {
                     b.HasOne("ResellerApp.Api.Entities.Item", "Item")
                         .WithMany("Listings")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("ResellerApp.Api.Entities.ListingDraft", b =>
-                {
-                    b.HasOne("ResellerApp.Api.Entities.Item", "Item")
-                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
