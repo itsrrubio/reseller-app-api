@@ -39,6 +39,10 @@ namespace ResellerApp.Api.Entities
 
         public decimal EstimatedNetProfit { get; set; }
 
+        public bool IsSold { get; set; }
+
+        public DateTime? DateSold { get; set; }
+
         // Navigation
         public ICollection<Listing> Listings { get; set; }
         public ICollection<ItemImage> Images { get; set; }

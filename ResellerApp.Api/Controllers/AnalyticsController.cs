@@ -108,11 +108,11 @@ namespace ResellerApp.Api.Controllers
             decimal cost = item.Cost;
 
             var results = new List<MarketplaceComparisonDto>
-    {
-        CalculatePlatform("eBay", 13m, salePrice, shipping, cost),
-        CalculatePlatform("Mercari", 10m, salePrice, shipping, cost),
-        CalculatePlatform("Poshmark", 20m, salePrice, shipping, cost)
-    }
+            {
+                CalculatePlatform("eBay", 13m, salePrice, shipping, cost),
+                CalculatePlatform("Mercari", 10m, salePrice, shipping, cost),
+                CalculatePlatform("Poshmark", 20m, salePrice, shipping, cost)
+            }
             .OrderByDescending(x => x.EstimatedNetProfit)
             .ToList();
 
@@ -136,6 +136,31 @@ namespace ResellerApp.Api.Controllers
                 FeePercent = feePercent,
                 EstimatedNetProfit = decimal.Round(netProfit, 2)
             };
+        }
+
+        [HttpGet("sell-through")]
+        public async Task<ActionResult<SellThroughDto>> GetSellThrough()
+        {
+            var totalItems = await _context.Items.CountAsync();
+
+            var soldItems = await _context.Items
+                .CountAsync(i => i.IsSold);
+
+            decimal rate = 0;
+
+            if (totalItems > 0)
+            {
+                rate = Math.Round(
+                    ((decimal)soldItems / totalItems) * 100,
+                    2);
+            }
+
+            return Ok(new SellThroughDto
+            {
+                TotalItems = totalItems,
+                SoldItems = soldItems,
+                SellThroughRatePercent = rate
+            });
         }
     }
 }
