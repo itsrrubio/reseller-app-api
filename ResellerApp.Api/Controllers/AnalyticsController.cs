@@ -94,5 +94,48 @@ namespace ResellerApp.Api.Controllers
 
             return Ok(items);
         }
+
+        [HttpGet("marketplace-comparison/{itemId}")]
+        public async Task<ActionResult<List<MarketplaceComparisonDto>>> CompareMarketplaces(int itemId)
+        {
+            var item = await _context.Items.FindAsync(itemId);
+
+            if (item == null)
+                return NotFound();
+
+            decimal salePrice = item.SuggestedListingPrice;
+            decimal shipping = item.EstimatedShippingCost;
+            decimal cost = item.Cost;
+
+            var results = new List<MarketplaceComparisonDto>
+    {
+        CalculatePlatform("eBay", 13m, salePrice, shipping, cost),
+        CalculatePlatform("Mercari", 10m, salePrice, shipping, cost),
+        CalculatePlatform("Poshmark", 20m, salePrice, shipping, cost)
+    }
+            .OrderByDescending(x => x.EstimatedNetProfit)
+            .ToList();
+
+            return Ok(results);
+        }
+
+        private MarketplaceComparisonDto CalculatePlatform(
+            string platform,
+            decimal feePercent,
+            decimal salePrice,
+            decimal shipping,
+            decimal cost)
+        {
+            decimal fees = salePrice * (feePercent / 100m);
+
+            decimal netProfit = salePrice - fees - shipping - cost;
+
+            return new MarketplaceComparisonDto
+            {
+                Platform = platform,
+                FeePercent = feePercent,
+                EstimatedNetProfit = decimal.Round(netProfit, 2)
+            };
+        }
     }
 }
