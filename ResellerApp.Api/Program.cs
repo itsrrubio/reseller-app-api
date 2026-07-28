@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using ResellerApp.Api.Configuration;
 using ResellerApp.Api.Data;
+using ResellerApp.Api.Interfaces;
 using ResellerApp.Api.Middleware;
 using ResellerApp.Api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +64,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.Configure<EbayOptions>(
+    builder.Configuration.GetSection("Ebay"));
+
+//builder.Services.AddHttpClient<EbayService>();
+
+builder.Services.AddHttpClient<IEbayService, EbayService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -69,7 +78,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseHttpsRedirection();
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionMiddleware>();
